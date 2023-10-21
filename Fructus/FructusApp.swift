@@ -16,9 +16,9 @@ struct FructusApp: App {
     var body: some Scene {
         WindowGroup {
             if isOnboarding {
-                HomeView()
-            } else {
                 OnboardingView()
+            } else {
+                HomeView()
             }
         }
     }

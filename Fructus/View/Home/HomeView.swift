@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeView: View {
     var viewModel = FruitsViewModel()
 
+    @State private var isShowingSettings: Bool = false
+
     var body: some View {
         NavigationView {
                 List {
@@ -25,10 +27,21 @@ struct HomeView: View {
                         .listRowSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/)
                     }
                 }
-
                 .navigationTitle("フルーツ")
+                .navigationBarItems(
+                  trailing:
+                    Button(action: {
+                      isShowingSettings = true
+                    }) {
+                      Image(systemName: "slider.horizontal.3")
+                    } //: BUTTON
+                    .sheet(isPresented: $isShowingSettings) {
+                      SettingsView()
+                    }
+                )
         } //: ナビゲーション
         .listStyle(.plain)
+        .navigationViewStyle(.stack)
     }
 }
 
