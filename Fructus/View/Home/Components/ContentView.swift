@@ -11,24 +11,29 @@ import CoreData
 struct ContentView: View {
 // MARK: -  プロパティー
 
+    @State private var isAnimating: Bool = false
+
+    var fruitsData: FruitsData
+
     // MARK: - ボディー
 
     var body: some View {
 
         ZStack {
             VStack(spacing: 20) {
-                Image(.blueberry)
+                Image(fruitsData.image)
                     .resizable()
                 .scaledToFit()
                 .shadow(color: .black.opacity(0.15), radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                .scaleEffect(isAnimating ? 1.0: 0.6)
 
-                Text("ブルーベリー")
+                Text(fruitsData.title)
                     .foregroundColor(.white)
                     .font(.largeTitle)
                     .fontWeight(.heavy)
                     .shadow(color: .red.opacity(2), radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
 
-                Text("ブルーベリーは甘くて栄養価が高く、\n世界中で大人気の果物です")
+                Text(fruitsData.headline)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal ,16)
@@ -38,14 +43,17 @@ struct ContentView: View {
 
             }//: VStack
         }//: ZStack
+        .onAppear {
+          withAnimation(.easeOut(duration: 0.5)) {
+            isAnimating = true
+          }
+        }
+
         .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
 
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [
-                    .colorBlueberryLight,
-                    .colorBlueberryDark
-                ]),
+                gradient: Gradient(colors: fruitsData.gradientColors),
                 startPoint: .top,
                 endPoint: .bottom)
         )
@@ -59,5 +67,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentView(fruitsData: FruitsViewModel().loadFruitsData(at: 0))
 }
